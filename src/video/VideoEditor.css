@@ -1,0 +1,39 @@
+.videoArea {
+    height: 60vh;
+}
+
+.videoEle {
+    height: 50%;
+    display: block;
+    margin: 0px auto;
+}
+
+.videoEleSelected {
+    outline: 4px solid orange;
+    outline-offset: -3px;
+}
+
+.videoButtonArea {
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.videoButtonEle {
+    background: turquoise;
+    border: 5px dotted lightgrey;
+    color: lavenderblush;
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.videoBarArea {
+    height: 10vh;
+}
+
+.timeDiv {
+
+}

@@ -1,0 +1,22 @@
+.timeSpan {
+    font-weight: 500;
+    color: #646cff;
+    cursor: pointer;
+}
+.timeSpan:hover {
+    color: #1a1a1a;
+}
+
+.timeInputs input{
+    width: 20px;
+}
+
+.timeBtn{
+    background: cadetblue;
+    border: 5px dotted lightgrey;
+    color: lavenderblush;
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px;
+}
