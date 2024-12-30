@@ -4,12 +4,5 @@ import App from './App.jsx'
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 
 createRoot(document.getElementById('root')).render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/">
-        <Route index element={<App />} />
-        {/*<Route path="video" element={<Video />} />*/}
-      </Route>
-    </Routes>
-  </BrowserRouter>
+  <App/>
 )
