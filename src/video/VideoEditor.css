@@ -16,14 +16,19 @@
 .videoButtonArea {
     height: 7vh;
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .videoButtonEle {
-    background: turquoise;
+    /* background: turquoise;
     border: 5px dotted lightgrey;
-    color: lavenderblush;
+    color: lavenderblush; */
+    background: #96DED1;
+    border: 3px dotted lightseagreen;
+    color: steelblue;
     font-size: 12px;
     padding: 5px;
     border-radius: 5px;

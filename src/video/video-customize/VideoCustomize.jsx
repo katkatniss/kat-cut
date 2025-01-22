@@ -30,16 +30,16 @@ const VideoCustomize = forwardRef(function VideosControl({ videoDatas, closeFun 
   }
 
   const videoMute = (e) => {
-    videoDatas[currentFocus.id].mute = true;
-    videoDatas[currentFocus.id].ele.muted = true;
+    videoDatas[state.currentFocusId].mute = true;
+    videoDatas[state.currentFocusId].ele.muted = true;
     setState(Object.assign(vc, {
       mute: true
     }));
   };
 
   const videoUnMute = (e) => {
-    videoDatas[currentFocus.id].mute = false;
-    videoDatas[currentFocus.id].ele.muted = false;
+    videoDatas[state.currentFocusId].mute = false;
+    videoDatas[state.currentFocusId].ele.muted = false;
     setState(Object.assign(vc, {
       mute: false
     }))
@@ -67,7 +67,7 @@ const VideoCustomize = forwardRef(function VideosControl({ videoDatas, closeFun 
             <button id="muteBtn" className={'videoButtonEle'} onClick={videoMute}>Mute</button>
             : <button id="unmuteBtn" className={'videoButtonEle'} onClick={videoUnMute}>Unmute</button>
         }
-          <button className={'videoButtonEle'} style={{ background: 'gray' }} onClick={close}>X</button>
+          <button className={'videoButtonEle'} style={{ background: 'lightcyan' }} onClick={close}>Close</button>
         </div>
         : <div id="videoBtnBar" className={'videoButtonArea'}></div>
       }

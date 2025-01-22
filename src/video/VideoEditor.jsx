@@ -49,6 +49,8 @@ function VideoEditor({ files }) {
         videoDatas[id].trimEnd = eles[id].duration;
         videoDatas[id].ele = eles[id];
         if (flag) {
+          let w = eles[id].getBoundingClientRect().width;
+          eles[id].parentElement.parentElement.style.width = w + 'px';
           closeLoading();
           vcRef.current.setState('refresh');
         }
@@ -64,7 +66,7 @@ function VideoEditor({ files }) {
     <>
       <div className={'elements-center'}>
         <div>
-          <div className={'videoArea'} onClick={(e) => { selectVideo(e, vcmRef) }}>
+          <div className={'videoArea'}>
             <video id="videoTop" preload={'auto'} onClick={(e) => { selectVideo(e, vcmRef) }} className={'videoEle'}>
               <source src={videoDatas.videoTop.uri + '#t=0.1'} type={'video/mp4'} />
             </video>

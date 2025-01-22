@@ -39,7 +39,6 @@ const TrimTimeRange = forwardRef(function TrimTimeRange({ videoDatas, currentFoc
       currentFocusId: ''
     }));
     closeFun(e);
-    // document.getElementById("trimBtn").style.display = 'inline';
   };
 
   const inputValueChange = () => {
@@ -56,7 +55,6 @@ const TrimTimeRange = forwardRef(function TrimTimeRange({ videoDatas, currentFoc
       start = currentFocus.trimStart;
     }
 
-
     const endInputs = inputOrSpan[1].getElementsByTagName('input');
     let end = 0;
     if (endInputs.length > 0) {
@@ -70,7 +68,9 @@ const TrimTimeRange = forwardRef(function TrimTimeRange({ videoDatas, currentFoc
 
     currentFocus.trimedDuration = (end - start);
 
-    currentFocus.ele.currentTime = start;
+    Object.keys(videoDatas).forEach((id) => {
+      videoDatas[id].ele.currentTime = videoDatas[id].trimStart;
+    });
   };
 
   useEffect(() => {
@@ -89,31 +89,33 @@ const TrimTimeRange = forwardRef(function TrimTimeRange({ videoDatas, currentFoc
   endArr[2] = endArr[1].split('.')[1];
   endArr[1] = endArr[1].split('.')[0];
 
-  const ds = (flag) => (flag ? 'inline' : 'none');
   return (
-    <div ref={divRef}>
-      {eleDispaly.ts ? <span className={'timeSpan'} onClick={(e) => { showNext('ts') }}>{startText}</span>
-        : <div className={'timeInputs'}>
-          <input defaultValue={startArr[0]} /> :
+    <div style={{ display: 'flex' }} ref={divRef}>
+      <div style={{ display: 'flex', alignItems: 'center' }} >
+        {eleDispaly.ts ? <span className={'timeSpan'} onClick={(e) => { showNext('ts') }}>{startText}</span>
+          : <div className={'timeInputs'}>
+            <input defaultValue={startArr[0]} /> :
         <input defaultValue={startArr[1]} /> .
         <input defaultValue={startArr[2]} />
-        </div>}
-      ~
+          </div>}
+        ~
       {eleDispaly.bs ? <span className={'timeSpan'} onClick={(e) => { showNext('bs') }}>{endText}</span>
-        : <div className={'timeInputs'}>
-          <input defaultValue={endArr[0]} /> :
+          : <div className={'timeInputs'}>
+            <input defaultValue={endArr[0]} /> :
         <input defaultValue={endArr[1]} /> .
         <input defaultValue={endArr[2]} />
-        </div>}
+          </div>}
+      </div>
       <button className={'timeBtn'} onClick={inputValueChange}>Trim</button>
-      <button className={'timeBtn'} onClick={close}>X</button>
+      <button className={'timeBtn'} onClick={close}>Close</button>
     </div>
   );
 });
 
 TrimTimeRange.propTypes = {
   videoDatas: PropTypes.any,
-  currentFocusId: PropTypes.string
+  currentFocusId: PropTypes.string,
+  closeFun: PropTypes.func
 }
 
 export default TrimTimeRange
