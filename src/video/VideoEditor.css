@@ -14,7 +14,7 @@
 }
 
 .videoButtonArea {
-    height: 10vh;
+    height: 7vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -31,9 +31,6 @@
 }
 
 .videoBarArea {
-    height: 10vh;
-}
-
-.timeDiv {
-
+    height: 16vh;
+    margin-top: 3vh;
 }

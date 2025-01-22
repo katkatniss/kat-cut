@@ -1,0 +1,29 @@
+#videoControl {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background: gray;
+    position: relative;
+    cursor: pointer;
+    top: 5px;
+    left: 0px;
+    color: darkslategray;
+}
+#videoControl span {
+    position: relative;
+    top:-20px;
+}
+
+#videoControlLine {
+    width: 100%;
+    border-top: 1px solid gray;
+    display: flex;
+    color: darkslategray;
+
+}
+
+#videoControlLine div {
+    width: 50%;
+    position: relative;
+    top: 5px;
+}
