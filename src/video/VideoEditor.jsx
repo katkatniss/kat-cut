@@ -52,12 +52,29 @@ function VideoEditor({ files }) {
           let w = eles[id].getBoundingClientRect().width;
           eles[id].parentElement.parentElement.style.width = w + 'px';
           closeLoading();
-          vcRef.current.setState('refresh');
+          vcRef.current.setState(0);
         }
         flag = true;
       }
+
+      let t = null;
+      eles[id].addEventListener('play', (e) => {
+        const id = e.target.id;
+        if (e.target.currentTime >= videoDatas[id].trimEnd) {
+          vcRef.current.videoStop(e);
+          return;
+        }
+        t = setInterval(() => {
+          vcRef.current.refreshControlTimer(e.target.currentTime - videoDatas[id].trimStart)
+        }, 100);
+      });
+      eles[id].addEventListener('pause', (e) => {
+        vcRef.current.setState(e.target.currentTime - videoDatas[e.target.id].trimStart)
+        clearInterval(t);
+      });
     });
-  }, [currentFocus]);
+
+  }, []);
 
   const vcRef = useRef(null);
   const vcmRef = useRef(null);
@@ -74,7 +91,7 @@ function VideoEditor({ files }) {
               <source src={videoDatas.videoBottom.uri + '#t=0.1'} type={'video/mp4'} />
             </video>
           </div>
-          <VideoCustomize videoDatas={videoDatas} ref={vcmRef} closeFun={selectVideo}/>
+          <VideoCustomize videoDatas={videoDatas} ref={vcmRef} closeFun={selectVideo} vcRef={vcRef}/>
           <VideosControl videoDatas={videoDatas} ref={vcRef} />
         </div>
       </div>

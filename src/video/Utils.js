@@ -4,7 +4,7 @@ export const secondToTimeFormat = (sec) => {
   const arr = ('' + sec).split('.');
   res[0] = ('' + Math.floor((arr[0]-'') / 60)).padStart(2, '0');
   res[1] = ('' + (arr[0]-'') % 60).padStart(2, '0');
-  res[2] = ('' + Math.round(((arr[1] || '0').substr(0, 3)  - '') / 10)).padStart(2, '0');
+  res[2] = ('' + Math.round(((arr[1] || '0').substr(0, 2)  - '') / 10));
 
   return `${res[0]}:${res[1]}.${res[2]}`;
 };

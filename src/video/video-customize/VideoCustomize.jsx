@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
 import TrimTimeRange from "../trim-time-range/TrimTimeRange.jsx";
 
-const VideoCustomize = forwardRef(function VideosControl({ videoDatas, closeFun }, ref) {
+const VideoCustomize = forwardRef(function VideosControl({ videoDatas, closeFun, vcRef }, ref) {
   const [state, setState] = useState(null);
   const vc = { isTrim: false, mute: false, currentFocusId: null };
 
@@ -60,7 +60,8 @@ const VideoCustomize = forwardRef(function VideosControl({ videoDatas, closeFun 
             <TrimTimeRange videoDatas={videoDatas}
               currentFocusId={state ?.currentFocusId}
               ref={ttrRef}
-              closeFun={() => { setState(Object.assign(vc, { isTrim: false })) }} />
+              closeFun={() => { setState(Object.assign(vc, { isTrim: false })) }}
+              vcRef={vcRef} />
             : <button id="trimBtn" className={'videoButtonEle'} onClick={videoTrim}>Trim</button>
         }
           {!state ?.mute ?
@@ -77,7 +78,8 @@ const VideoCustomize = forwardRef(function VideosControl({ videoDatas, closeFun 
 
 VideoCustomize.propTypes = {
   videoDatas: PropTypes.any,
-  closeFun: PropTypes.func
+  closeFun: PropTypes.func,
+  vcRef: PropTypes.any
 }
 
 export default VideoCustomize

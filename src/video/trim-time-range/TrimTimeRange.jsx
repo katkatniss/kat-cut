@@ -5,7 +5,7 @@ import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { toBlobURL } from "@ffmpeg/util";
 import { secondToTimeFormat } from "../Utils.js";
 
-const TrimTimeRange = forwardRef(function TrimTimeRange({ videoDatas, currentFocusId, closeFun }, ref) {
+const TrimTimeRange = forwardRef(function TrimTimeRange({ videoDatas, currentFocusId, closeFun, vcRef }, ref) {
   const [state, setShowHideState] = useState(null);
   const currentFocus = videoDatas[state ?.currentFocusId || currentFocusId];
 
@@ -20,7 +20,6 @@ const TrimTimeRange = forwardRef(function TrimTimeRange({ videoDatas, currentFoc
       }
     };
   }, []);
-
 
   const eleDispaly = state ? state : {
     ts: true,
@@ -49,7 +48,7 @@ const TrimTimeRange = forwardRef(function TrimTimeRange({ videoDatas, currentFoc
     if (startInputs.length > 0) {
       start += startInputs[0].value * 60;
       start += startInputs[1].value * 1;
-      start += startInputs[2].value / 1000;
+      start += startInputs[2].value / 10;
       currentFocus.trimStart = start;
     } else {
       start = currentFocus.trimStart;
@@ -60,7 +59,7 @@ const TrimTimeRange = forwardRef(function TrimTimeRange({ videoDatas, currentFoc
     if (endInputs.length > 0) {
       end += endInputs[0].value * 60;
       end += endInputs[1].value * 1;
-      end += endInputs[2].value / 1000;
+      end += endInputs[2].value / 10;
       currentFocus.trimEnd = end;
     } else {
       end = currentFocus.trimEnd;
@@ -71,6 +70,8 @@ const TrimTimeRange = forwardRef(function TrimTimeRange({ videoDatas, currentFoc
     Object.keys(videoDatas).forEach((id) => {
       videoDatas[id].ele.currentTime = videoDatas[id].trimStart;
     });
+
+    vcRef.current.setState(0);
   };
 
   useEffect(() => {
@@ -90,8 +91,8 @@ const TrimTimeRange = forwardRef(function TrimTimeRange({ videoDatas, currentFoc
   endArr[1] = endArr[1].split('.')[0];
 
   return (
-    <div style={{ display: 'flex' }} ref={divRef}>
-      <div style={{ display: 'flex', alignItems: 'center' }} >
+    <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', alignItems: 'center' }} ref={divRef}>
         {eleDispaly.ts ? <span className={'timeSpan'} onClick={(e) => { showNext('ts') }}>{startText}</span>
           : <div className={'timeInputs'}>
             <input defaultValue={startArr[0]} /> :
@@ -115,7 +116,8 @@ const TrimTimeRange = forwardRef(function TrimTimeRange({ videoDatas, currentFoc
 TrimTimeRange.propTypes = {
   videoDatas: PropTypes.any,
   currentFocusId: PropTypes.string,
-  closeFun: PropTypes.func
+  closeFun: PropTypes.func,
+  vcRef: PropTypes.any
 }
 
 export default TrimTimeRange
