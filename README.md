@@ -2,7 +2,7 @@
 [katkatniss.github.io/kat-cut](https://katkatniss.github.io/kat-cut)
 
 ## Overview
-This project is a tool for creating dance comparison videos. Users can place the original dance video and their own performance video side by side for easy comparison. If the movements differ between the videos, users can synchronize them by adjusting the timeline. Additionally, the tool includes a drawing feature that allows users to mark areas where they need to adjust formations or movements.
+This project is a tool for dance comparison videos. Users can place the original dance video and their own performance video side by side for easy comparison. If the movements differ between the videos, users can synchronize them by adjusting the timeline. Additionally, the tool includes a drawing feature that allows users to mark areas where they need to adjust formations or movements.
 
 ## Key Features
 + **Side-by-side Video Display**
