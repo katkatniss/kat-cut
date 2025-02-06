@@ -10,7 +10,7 @@
     color: darkslategray;
 }
 #videoControl span {
-    position: relative;
+    position: absolute;
     top:-20px;
 }
 

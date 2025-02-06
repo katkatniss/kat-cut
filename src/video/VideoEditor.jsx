@@ -60,16 +60,12 @@ function VideoEditor({ files }) {
       let t = null;
       eles[id].addEventListener('play', (e) => {
         const id = e.target.id;
-        if (e.target.currentTime >= videoDatas[id].trimEnd) {
-          vcRef.current.videoStop(e);
-          return;
-        }
         t = setInterval(() => {
           vcRef.current.refreshControlTimer(e.target.currentTime - videoDatas[id].trimStart)
         }, 100);
       });
       eles[id].addEventListener('pause', (e) => {
-        vcRef.current.setState(e.target.currentTime - videoDatas[e.target.id].trimStart)
+        // vcRef.current.setState(e.target.currentTime - videoDatas[e.target.id].trimStart)
         clearInterval(t);
       });
     });

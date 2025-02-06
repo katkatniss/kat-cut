@@ -1,5 +1,5 @@
 .videoArea {
-    height: 60vh;
+    height: 60dvh;
 }
 
 .videoEle {
@@ -14,7 +14,7 @@
 }
 
 .videoButtonArea {
-    height: 7vh;
+    height: 7dvh;
     display: flex;
     justify-content: left;
     align-items: center;
@@ -36,6 +36,6 @@
 }
 
 .videoBarArea {
-    height: 16vh;
-    margin-top: 3vh;
+    height: 16dvh;
+    margin-top: 3dvh;
 }

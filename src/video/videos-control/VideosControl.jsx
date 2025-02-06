@@ -1,42 +1,69 @@
 import './VideosControl.css';
 import PropTypes from "prop-types";
 import VideoSave from "../video-save/VideoSave";
-import { secondToTimeFormat } from "../Utils.js";
-import { useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
+import {isMobileDevice, secondToTimeFormat} from "../Utils.js";
+import {useState, useEffect, forwardRef, useImperativeHandle, useRef} from 'react';
 
 
 let videoTop = null;
 let videoBottom = null;
-
-let divWidth = 0;
-
 let drawDatas = {};
-const VideosControl = forwardRef(function VideosControl({ videoDatas }, ref) {
-  const vc = {
-    curr: 0,
-    isPlay: false,
-    isDraw: false,
-    dc: null
-  };
+let videoDuration = 0;
+
+const vc = {
+  curr: 0,
+  isPlay: false,
+  isDraw: false,
+  dc: null
+};
+
+const VideosControl = forwardRef(function VideosControl({videoDatas}, ref) {
+
   const [state, setState] = useState(vc);
 
+  const videoRestart = (e) => {
+    videoTop.currentTime = videoDatas.videoTop.trimStart;
+    videoBottom.currentTime = videoDatas.videoBottom.trimStart;
+    refreshControlTimer(0);
+  };
+
+  const videoPlay = (e) => {
+    videoTop.play();
+    videoBottom.play();
+    reRender(state, {isPlay: true, curr: vc.curr});
+  }
+
+  const videoStop = (e) => {
+    videoTop.pause();
+    videoBottom.pause();
+    reRender(state, {isPlay: false, curr: vc.curr});
+  }
+
   const refreshControlTimer = (t) => {
-    state.curr = t;
+    if (t >= videoDuration) {
+      videoStop();
+      return;
+    }
+    vc.curr = t;
 
     const control = controlRef.current;
-    control.style.left = (t / videoDuration || 0) * divWidth + 'px';
+    const left = (t / videoDuration || 0);
+    control.style.left = (left > 1 ? 1 : left) * controlRef.current?.parentElement.clientWidth + 'px';
+    control.firstChild.style.left = ((left > 1 ? 1 : left) * -50) + 'px';
 
     const span = control.firstChild
     span.textContent = secondToTimeFormat(t);
 
+    const c = drawDatas[secondToTimeFormat(t)];
     const canvases = document.getElementsByTagName('canvas');
     for (let i = 0; i < canvases.length; i++) {
-      canvases[i].style.display = 'none';
+      if (c && canvases[i] === c) {
+        canvases[i].style.display = 'block';
+      } else {
+        canvases[i].style.display = 'none';
+      }
     }
-    const c = drawDatas[secondToTimeFormat(t)];
-    if (c) {
-      c.style.display = 'block';
-    }
+
   }
 
   const reRender = (state, data) => {
@@ -48,9 +75,6 @@ const VideosControl = forwardRef(function VideosControl({ videoDatas }, ref) {
 
   useImperativeHandle(ref, () => {
     return {
-      videoStop(e) {
-        videoStop(e);
-      },
       setState(curr) {
         reRender(state, {curr: curr});
       },
@@ -63,13 +87,10 @@ const VideosControl = forwardRef(function VideosControl({ videoDatas }, ref) {
   const controlRef = useRef(null);
 
   useEffect(() => {
-    divWidth = controlRef.current ?.parentElement.clientWidth;
   }, []);
 
   const top = videoDatas.videoTop;
   const bottom = videoDatas.videoBottom;
-
-  let videoDuration = 0;
 
   if (top.ele && bottom.ele) {
     videoTop = videoTop || top.ele;
@@ -90,24 +111,6 @@ const VideosControl = forwardRef(function VideosControl({ videoDatas }, ref) {
     </div>);
   }
 
-  const videoRestart = (e) => {
-    videoTop.currentTime = videoDatas.videoTop.trimStart;
-    videoBottom.currentTime = videoDatas.videoBottom.trimStart;
-    refreshControlTimer(0);
-  };
-
-  const videoPlay = (e) => {
-    videoTop.play();
-    videoBottom.play();
-    reRender(state, {isPlay: true});
-  }
-
-  const videoStop = (e) => {
-    videoTop.pause();
-    videoBottom.pause();
-    reRender(state, {isPlay: false});
-  }
-
   const videoDraw = (e) => {
     const key = secondToTimeFormat(state.curr);
 
@@ -123,9 +126,9 @@ const VideosControl = forwardRef(function VideosControl({ videoDatas }, ref) {
         width: top.width + 'px',
         height: top.height * 2 + 'px'
       });
-      dc.addEventListener('mousedown', videoDrawStart);
-      dc.addEventListener('mousemove', videoDrawing);
-      dc.addEventListener('mouseup', videoDrawEnd);
+      dc.addEventListener(isMobileDevice() ? 'touchstart' : 'mousedown', videoDrawStart);
+      dc.addEventListener(isMobileDevice() ? 'touchmove' : 'mousemove', videoDrawing);
+      dc.addEventListener(isMobileDevice() ? 'touchend' : 'mouseup', videoDrawEnd);
       document.body.append(dc);
       for (let i = 0.1; i <= 1; i = i + 0.1) {
         drawDatas[secondToTimeFormat(state.curr + i)] = dc;
@@ -148,6 +151,7 @@ const VideosControl = forwardRef(function VideosControl({ videoDatas }, ref) {
   const videoDrawStart = (e) => {
     const dc = e.target;
     dcc = dc.getContext('2d');
+    dcc.strokeStyle = "red";
     dcc.beginPath();
     const rect = dc.getBoundingClientRect();
     const wfactor = dc.width / rect.width;
@@ -206,25 +210,26 @@ const VideosControl = forwardRef(function VideosControl({ videoDatas }, ref) {
         <button id="stopBtn" onClick={videoStop} className={'videoButtonEle unselectable'}>Stop</button>
         {
           state.isPlay ? <div></div> :
-          (state.isDraw ? 
-          <button onClick={videoStopDraw} className={'videoButtonEle unselectable'}>StopDraw</button>
-          : <button onClick={videoDraw} className={'videoButtonEle unselectable'}>Draw</button>)
+            (state.isDraw ?
+              <button onClick={videoStopDraw} className={'videoButtonEle unselectable'}>StopDraw</button>
+              : <button onClick={videoDraw} className={'videoButtonEle unselectable'}>Draw</button>)
         }
       </div>
       <div className={'videoBarArea'}>
         <div onMouseUp={videosControlEnd}>
           <div id="videoControl"
-            ref={controlRef}
-            style={{ left: (state.curr / videoDuration || 0) * divWidth }}
-            onMouseDown={videosControlStart}
-            onMouseMove={videosControlling}>
-            <span className={'unselectable'} onMouseDown={(e) => e.stopPropagation()} onMouseMove={(e) => e.stopPropagation()}>
+               ref={controlRef}
+               style={{left: (state.curr / videoDuration || 0) * controlRef.current?.parentElement.clientWidth}}
+               onMouseDown={videosControlStart}
+               onMouseMove={videosControlling}>
+            <span className={'unselectable'} onMouseDown={(e) => e.stopPropagation()}
+                  onMouseMove={(e) => e.stopPropagation()}>
               {secondToTimeFormat(state.curr)}
             </span>
           </div>
           <div onMouseMove={(e) => e.stopPropagation()} id="videoControlLine">
-            <div className={'unselectable'} style={{ textAlign: 'left' }}>{secondToTimeFormat(0)}</div>
-            <div className={'unselectable'} style={{ textAlign: 'right' }}>{secondToTimeFormat(videoDuration)}</div>
+            <div className={'unselectable'} style={{textAlign: 'left'}}>{secondToTimeFormat(0)}</div>
+            <div className={'unselectable'} style={{textAlign: 'right'}}>{secondToTimeFormat(videoDuration)}</div>
           </div>
         </div>
       </div>
